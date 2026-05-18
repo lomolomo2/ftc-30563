@@ -107,6 +107,14 @@
       font-size: 16px;
     }
 
+    .empty-state {
+      color: var(--muted);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 20px;
+    }
+
     footer {
       width: min(980px, calc(100% - 32px));
       margin: 0 auto 28px;
@@ -125,16 +133,22 @@
     <h2 class="section-title">Lessons</h2>
     <ul class="lesson-list">
       <li class="lesson-card">
+        <a href="pid-controller-lesson.html">
+          <span class="lesson-title">PIDController Step-by-Step Lesson</span>
+          <p class="lesson-description">A 7th-grade friendly lesson that explains proportional, integral, and derivative control with simple math diagrams.</p>
+        </a>
+      </li>
+      <li class="lesson-card">
         <a href="tank-controller-test-lesson.html">
           <span class="lesson-title">TankControllerTest Step-by-Step Lesson</span>
-          <p class="lesson-description">A guided lesson for testing tank drive controller behavior.</p>
+          <p class="lesson-description">A 7th-grade friendly animated lesson for explaining how the autonomous program drives a tank-drive robot through five target positions.</p>
         </a>
       </li>
     </ul>
   </main>
 
   <footer>
-    Add future lesson HTML files to this repository and link them from this table of contents.
+    Add future lesson HTML files to this repository and rerun the index updater.
   </footer>
 </body>
 </html>
