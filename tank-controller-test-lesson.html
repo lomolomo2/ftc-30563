@@ -1,0 +1,836 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TankControllerTest Step-by-Step Lesson</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202a;
+      --muted: #5f6c7b;
+      --paper: #f7f9fb;
+      --panel: #ffffff;
+      --line: #d8e0ea;
+      --blue: #246bfe;
+      --green: #18a058;
+      --orange: #f59e0b;
+      --red: #dc2626;
+      --purple: #7c3aed;
+      --shadow: 0 18px 50px rgba(26, 41, 61, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.45;
+    }
+
+    header {
+      padding: 24px clamp(18px, 4vw, 48px);
+      background: #102033;
+      color: white;
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: clamp(28px, 4vw, 48px);
+      letter-spacing: 0;
+    }
+
+    header p {
+      max-width: 980px;
+      margin: 0;
+      color: #d8e6f7;
+      font-size: 18px;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: 20px;
+      padding: 20px clamp(16px, 4vw, 48px) 40px;
+    }
+
+    .slides {
+      min-width: 0;
+    }
+
+    .slide {
+      display: none;
+      min-height: 560px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: clamp(18px, 3vw, 34px);
+    }
+
+    .slide.active {
+      display: block;
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: clamp(24px, 3vw, 36px);
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 18px 0 8px;
+      font-size: 20px;
+    }
+
+    p, li {
+      font-size: 18px;
+    }
+
+    code {
+      background: #eef3f9;
+      border: 1px solid #dce5ef;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 0.94em;
+    }
+
+    pre {
+      overflow-x: auto;
+      background: #0f172a;
+      color: #e2e8f0;
+      border-radius: 8px;
+      padding: 16px 18px;
+      font-size: 16px;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    pre code {
+      display: block;
+      background: transparent;
+      border: 0;
+      padding: 0;
+      color: inherit;
+      font-size: 1em;
+      line-height: inherit;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 0.9fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .callout {
+      border-left: 5px solid var(--blue);
+      background: #f0f6ff;
+      padding: 14px 16px;
+      border-radius: 6px;
+      margin: 14px 0;
+      overflow-wrap: break-word;
+    }
+
+    .callout strong {
+      color: #0f4ec7;
+    }
+
+    .source {
+      margin-top: 14px;
+      padding: 10px 12px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 6px;
+      color: #7c2d12;
+      font-size: 15px;
+      overflow-wrap: anywhere;
+    }
+
+    .source a {
+      color: #9a3412;
+      font-weight: 700;
+    }
+
+    aside {
+      position: sticky;
+      top: 16px;
+      height: fit-content;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .nav-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 6px;
+      background: var(--blue);
+      color: white;
+      min-height: 42px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button.secondary {
+      background: #e7edf5;
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .progress {
+      height: 10px;
+      background: #e7edf5;
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 10px 0 16px;
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--green), var(--blue));
+      transition: width 250ms ease;
+    }
+
+    .toc {
+      display: grid;
+      gap: 8px;
+    }
+
+    .toc button {
+      text-align: left;
+      padding: 10px;
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      font-weight: 600;
+      min-height: auto;
+    }
+
+    .toc button.current {
+      border-color: var(--blue);
+      background: #edf4ff;
+      color: #0f4ec7;
+    }
+
+    .field {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      min-height: 340px;
+      max-height: 520px;
+      background:
+        linear-gradient(#dfe8f2 1px, transparent 1px),
+        linear-gradient(90deg, #dfe8f2 1px, transparent 1px),
+        #f9fbfd;
+      background-size: 25% 25%;
+      border: 3px solid #243b53;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .axis-label {
+      position: absolute;
+      font-size: 13px;
+      color: var(--muted);
+      background: rgba(255,255,255,0.86);
+      padding: 3px 6px;
+      border-radius: 4px;
+    }
+
+    .x-label {
+      right: 8px;
+      bottom: 8px;
+    }
+
+    .y-label {
+      left: 8px;
+      top: 8px;
+    }
+
+    .path {
+      position: absolute;
+      inset: 9%;
+      border-left: 5px solid var(--green);
+      border-top: 5px solid var(--green);
+      border-right: 5px solid var(--green);
+      border-bottom: 0;
+      opacity: 0.35;
+    }
+
+    .target {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 3px solid white;
+      box-shadow: 0 0 0 2px var(--blue), 0 4px 10px rgba(0,0,0,0.18);
+      background: var(--blue);
+    }
+
+    .target span {
+      position: absolute;
+      left: 18px;
+      top: -10px;
+      color: var(--ink);
+      font-size: 13px;
+      white-space: nowrap;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 2px 5px;
+    }
+
+    .robot {
+      position: absolute;
+      left: 9%;
+      bottom: 9%;
+      width: 58px;
+      height: 42px;
+      transform: translate(-50%, 50%) rotate(0deg);
+      transition: left 900ms ease, bottom 900ms ease, transform 900ms ease;
+      transform-origin: center;
+    }
+
+    .robot-body {
+      position: absolute;
+      inset: 4px 8px;
+      background: var(--orange);
+      border: 3px solid #92400e;
+      border-radius: 6px;
+    }
+
+    .wheel {
+      position: absolute;
+      top: 2px;
+      width: 8px;
+      height: 38px;
+      background: #111827;
+      border-radius: 4px;
+    }
+
+    .wheel.left {
+      left: 0;
+    }
+
+    .wheel.right {
+      right: 0;
+    }
+
+    .nose {
+      position: absolute;
+      right: -2px;
+      top: 16px;
+      width: 0;
+      height: 0;
+      border-top: 6px solid transparent;
+      border-bottom: 6px solid transparent;
+      border-left: 10px solid var(--red);
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 5px 9px;
+      background: white;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--blue);
+    }
+
+    .state-machine {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(130px, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .state {
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: #fbfdff;
+      min-height: 74px;
+      transition: background 250ms ease, border-color 250ms ease, transform 250ms ease;
+    }
+
+    .state.active-state {
+      border-color: var(--green);
+      background: #ecfdf3;
+      transform: translateY(-3px);
+    }
+
+    .state strong {
+      display: block;
+      font-size: 15px;
+    }
+
+    .state small {
+      color: var(--muted);
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+      margin: 18px 0;
+    }
+
+    .timeline div {
+      min-height: 70px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px;
+      background: #f8fafc;
+      font-size: 14px;
+    }
+
+    .timeline .hot {
+      border-color: var(--purple);
+      background: #f5f0ff;
+    }
+
+    .big-number {
+      font-size: 42px;
+      font-weight: 800;
+      color: var(--blue);
+    }
+
+    @media (max-width: 980px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+
+      aside {
+        position: static;
+      }
+
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+
+      .state-machine {
+        grid-template-columns: repeat(2, minmax(130px, 1fr));
+      }
+    }
+
+    @media (max-width: 560px) {
+      .timeline {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .state-machine {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>TankControllerTest: Robot Navigation, Step by Step</h1>
+    <p>A 7th-grade friendly animated lesson for explaining how the autonomous program drives a tank-drive robot through five target positions.</p>
+  </header>
+
+  <main>
+    <section class="slides" aria-live="polite">
+      <article class="slide active">
+        <h2>1. What This Program Does</h2>
+        <div class="two-col">
+          <div>
+            <p><code>TankControllerTest</code> is an autonomous OpMode. That means the robot follows instructions after the driver presses START.</p>
+            <p>Think of the robot like a student walking to marked spots on a gym floor. The program says:</p>
+            <ol>
+              <li>Start at position zero.</li>
+              <li>Drive to Target 1.</li>
+              <li>Turn and move through Targets 2, 3, 4, and 5.</li>
+              <li>Stop when the path is complete.</li>
+            </ol>
+            <div class="callout">Big idea: the code repeats a simple question: <strong>Am I at the target yet?</strong> If yes, it moves to the next target.</div>
+            <div class="source">Source: OpMode name and class are defined in <a href="../src/main/java/org/firstinspires/ftc/teamcode/TankControllerTest.java#L17">TankControllerTest.java lines 17-19</a>.</div>
+          </div>
+          <div>
+            <div class="field" data-field="intro">
+              <div class="path"></div>
+              <div class="axis-label y-label">Y direction</div>
+              <div class="axis-label x-label">X direction</div>
+              <div class="target" style="left: 91%; bottom: 9%;"><span>T1/T2</span></div>
+              <div class="target" style="left: 91%; bottom: 91%;"><span>T3/T4</span></div>
+              <div class="target" style="left: 9%; bottom: 91%;"><span>T5</span></div>
+              <div class="robot" id="robotIntro">
+                <div class="wheel left"></div><div class="wheel right"></div><div class="robot-body"></div><div class="nose"></div>
+              </div>
+            </div>
+            <div class="legend"><span class="pill"><span class="dot"></span> Blue dots are target poses</span><span class="pill">Orange robot moves automatically</span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="slide">
+        <h2>2. The Robot's Parts in Code</h2>
+        <p>The code first creates variables for the robot parts it will use. A variable is like a label on a storage box.</p>
+        <div class="timeline">
+          <div class="hot"><strong>Left motor</strong><br><code>leftDrive</code></div>
+          <div class="hot"><strong>Right motor</strong><br><code>rightDrive</code></div>
+          <div><strong>Distance PID</strong><br>helps drive forward</div>
+          <div><strong>Heading PID</strong><br>helps turn</div>
+          <div><strong>TankController</strong><br>combines driving and turning</div>
+          <div><strong>Pinpoint</strong><br>tracks position</div>
+        </div>
+        <pre><code>private DcMotor leftDrive = null;
+private DcMotor rightDrive = null;
+private PIDController distanceController;
+private PIDController headingController;
+private TankController tankController;
+private GoBildaPinpointDriver odo;</code></pre>
+        <div class="callout"><strong>Student version:</strong> before the robot can move, the program gives names to the parts it will control: two drive motors, two correction helpers, the tank-drive controller, and the position sensor.</div>
+        <div class="source">Source: these robot part variables are declared in <a href="../src/main/java/org/firstinspires/ftc/teamcode/TankControllerTest.java#L21">TankControllerTest.java lines 21-28</a>.</div>
+      </article>
+
+      <article class="slide">
+        <h2>3. The State Machine</h2>
+        <p>A state machine is a checklist where the robot only does one job at a time.</p>
+        <p>When one job is finished, the robot changes to the next state.</p>
+        <div class="state-machine" id="stateMachine">
+          <div class="state active-state"><strong>WAITING</strong><small>Before moving</small></div>
+          <div class="state"><strong>TARGET 1</strong><small>Drive to first spot</small></div>
+          <div class="state"><strong>TARGET 2</strong><small>Turn to 90 degrees</small></div>
+          <div class="state"><strong>TARGET 3</strong><small>Drive upward</small></div>
+          <div class="state"><strong>TARGET 4</strong><small>Turn around</small></div>
+          <div class="state"><strong>TARGET 5</strong><small>Drive left</small></div>
+          <div class="state"><strong>AT TARGET</strong><small>Stop motors</small></div>
+        </div>
+        <p><button type="button" id="playStates">Animate State Machine</button></p>
+        <div class="callout">Big idea: the robot does not try every instruction at once. It follows the current state.</div>
+        <div class="source">Source: state names are declared in <a href="../src/main/java/org/firstinspires/ftc/teamcode/TankControllerTest.java#L30">TankControllerTest.java lines 30-38</a>.</div>
+      </article>
+
+      <article class="slide">
+        <h2>4. Target Positions Are Like Map Coordinates</h2>
+        <div class="two-col">
+          <div>
+            <p>The targets are written as <code>Pose2D</code> objects. A pose means:</p>
+            <ul>
+              <li><strong>X</strong>: side-to-side or forward map distance</li>
+              <li><strong>Y</strong>: the other map distance</li>
+              <li><strong>Heading</strong>: where the robot points, in degrees</li>
+            </ul>
+            <p>The distance unit is millimeters. The square size is <code>400.0</code> mm.</p>
+            <pre><code>TARGET_1 = (400, 0, 0 degrees)
+TARGET_2 = (400, 0, 90 degrees)
+TARGET_3 = (400, 400, 90 degrees)
+TARGET_4 = (400, 400, -180 degrees)
+TARGET_5 = (0, 400, -180 degrees)</code></pre>
+            <div class="source">Source: target poses are defined in <a href="../src/main/java/org/firstinspires/ftc/teamcode/TankControllerTest.java#L40">TankControllerTest.java lines 40-45</a>.</div>
+          </div>
+          <div>
+            <div class="field">
+              <div class="path"></div>
+              <div class="target" style="left: 91%; bottom: 9%;"><span>400,0</span></div>
+              <div class="target" style="left: 91%; bottom: 91%;"><span>400,400</span></div>
+              <div class="target" style="left: 9%; bottom: 91%;"><span>0,400</span></div>
+              <div class="robot" id="robotTargets">
+                <div class="wheel left"></div><div class="wheel right"></div><div class="robot-body"></div><div class="nose"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="slide">
+        <h2>5. Setup Before START</h2>
+        <p>Before the robot moves, the code connects to real hardware by name. These names must match the Robot Controller configuration.</p>
+        <pre><code>leftDrive = hardwareMap.get(DcMotor.class, "motorLeft");
+rightDrive = hardwareMap.get(DcMotor.class, "motorRight");</code></pre>
+        <p>Then it sets motor behavior and direction:</p>
+        <ul>
+          <li><code>BRAKE</code> helps the motors resist rolling when power is zero.</li>
+          <li>The left motor is reversed because left and right motors face opposite directions on many drivetrains.</li>
+        </ul>
+        <div class="source">Source: hardware mapping and motor setup are in <a href="../src/main/java/org/firstinspires/ftc/teamcode/TankControllerTest.java#L53">TankControllerTest.java lines 53-60</a>.</div>
+      </article>
+
+      <article class="slide">
+        <h2>6. PID Controllers Are Correction Helpers</h2>
+        <p>A PID controller is a helper that answers: <strong>How hard should I correct my mistake?</strong></p>
+        <div class="two-col">
+          <div>
+            <ul>
+              <li>The <strong>distance controller</strong> helps the robot move closer to the target.</li>
+              <li>The <strong>heading controller</strong> helps the robot point the right direction.</li>
+              <li>The <strong>TankController</strong> turns those corrections into left and right motor power.</li>
+            </ul>
+            <pre><code>distanceController = new PIDController(...);
+headingController = new PIDController(...);
+tankController = new TankController(...);</code></pre>
+          </div>
+          <div class="callout">
+            Imagine walking to a door while a friend gives corrections:
+            <br><br>
+            "A little forward."
+            <br>
+            "Turn right a bit."
+            <br>
+            "Slow down, you're close."
+          </div>
+        </div>
+        <div class="source">Source: PID and tank controller setup are in <a href="../src/main/java/org/firstinspires/ftc/teamcode/TankControllerTest.java#L62">TankControllerTest.java lines 62-64</a>.</div>
+      </article>
+
+      <article class="slide">
+        <h2>7. Pinpoint Is the Robot's Map Sensor</h2>
+        <p>The code uses a goBILDA Pinpoint odometry computer named <code>odo</code>. It tracks where the robot is.</p>
+        <ol>
+          <li>Get the sensor from hardware map.</li>
+          <li>Configure the sensor.</li>
+          <li>Set the starting position to X=0, Y=0, Heading=0.</li>
+        </ol>
+        <pre><code>odo = hardwareMap.get(GoBildaPinpointDriver.class, "odo");
+configurePinpoint(odo);
+odo.setPosition(new Pose2D(... 0, 0, ... 0));</code></pre>
+        <div class="source">Source: Pinpoint setup is in <a href="../src/main/java/org/firstinspires/ftc/teamcode/TankControllerTest.java#L66">TankControllerTest.java lines 66-68</a>. Pinpoint configuration is in <a href="../src/main/java/org/firstinspires/ftc/teamcode/TankControllerTest.java#L146">lines 146-151</a>.</div>
+      </article>
+
+      <article class="slide">
+        <h2>8. The Main Loop Repeats Fast</h2>
+        <p>After START, the program enters a loop. This loop runs again and again while the OpMode is active.</p>
+        <pre><code>while (opModeIsActive()) {
+    odo.update();
+    switch (stateMachine) {
+        ...
+    }
+}</code></pre>
+        <p>Each loop does three key jobs:</p>
+        <ol>
+          <li>Update the robot's position.</li>
+          <li>Check the current state.</li>
+          <li>Tell telemetry what is happening.</li>
+        </ol>
+        <div class="callout">The robot is not doing one giant move. It is making many tiny decisions very quickly.</div>
+        <div class="source">Source: loop and odometry update are in <a href="../src/main/java/org/firstinspires/ftc/teamcode/TankControllerTest.java#L80">TankControllerTest.java lines 80-83</a>.</div>
+      </article>
+
+      <article class="slide">
+        <h2>9. DriveTo: The Important Question</h2>
+        <p>For each target, the code calls <code>tankController.DriveTo(...)</code>.</p>
+        <p>That method returns:</p>
+        <ul>
+          <li><code>false</code>: "I am still moving."</li>
+          <li><code>true</code>: "I reached the target and held it long enough."</li>
+        </ul>
+        <pre><code>if (tankController.DriveTo(... TARGET_1 ...)) {
+    telemetry.addLine("at position #1!");
+    tankController.reset();
+    stateMachine = StateMachine.DRIVE_TO_TARGET_2;
+}</code></pre>
+        <div class="source">Source: target transitions are in <a href="../src/main/java/org/firstinspires/ftc/teamcode/TankControllerTest.java#L89">TankControllerTest.java lines 89-127</a>.</div>
+      </article>
+
+      <article class="slide">
+        <h2>10. Watch the Robot Path</h2>
+        <div class="two-col">
+          <div>
+            <p>Use this animation while presenting. Each click moves the robot to the next target in the same order as the code.</p>
+            <p><button type="button" id="nextMove">Move One Step</button> <button type="button" class="secondary" id="resetMove">Reset</button></p>
+            <p id="moveText"><span class="big-number">0</span><br>Start at X=0, Y=0, Heading=0 degrees.</p>
+            <div class="source">Source: movement order follows <a href="../src/main/java/org/firstinspires/ftc/teamcode/TankControllerTest.java#L83">TankControllerTest.java lines 83-127</a>.</div>
+          </div>
+          <div>
+            <div class="field">
+              <div class="path"></div>
+              <div class="target" style="left: 91%; bottom: 9%;"><span>T1/T2</span></div>
+              <div class="target" style="left: 91%; bottom: 91%;"><span>T3/T4</span></div>
+              <div class="target" style="left: 9%; bottom: 91%;"><span>T5</span></div>
+              <div class="robot" id="robotPath">
+                <div class="wheel left"></div><div class="wheel right"></div><div class="robot-body"></div><div class="nose"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="slide">
+        <h2>11. Telemetry Is the Robot's Voice</h2>
+        <p>Telemetry sends messages to the Driver Station so humans can see what the robot thinks is happening.</p>
+        <pre><code>Pose2D pos = odo.getPosition();
+String data = String.format(... X, Y, H ...);
+telemetry.addData("Position", data);
+telemetry.update();</code></pre>
+        <p>The code reports:</p>
+        <ul>
+          <li>X position</li>
+          <li>Y position</li>
+          <li>Heading angle</li>
+        </ul>
+        <div class="callout">When debugging, telemetry is like asking the robot, "Where do you think you are right now?"</div>
+        <div class="source">Source: telemetry position output is in <a href="../src/main/java/org/firstinspires/ftc/teamcode/TankControllerTest.java#L136">TankControllerTest.java lines 136-142</a>.</div>
+      </article>
+
+      <article class="slide">
+        <h2>12. Final Stop</h2>
+        <p>When the robot reaches the final target, it changes to <code>AT_TARGET</code>. Then both motors are set to zero power.</p>
+        <pre><code>case AT_TARGET:
+    leftDrive.setPower(0.0);
+    rightDrive.setPower(0.0);
+    telemetry.addLine("Tank controller test complete");
+    break;</code></pre>
+        <div class="callout">The final state is important because a robot should always have a clear "done" behavior.</div>
+        <div class="source">Source: final stop behavior is in <a href="../src/main/java/org/firstinspires/ftc/teamcode/TankControllerTest.java#L129">TankControllerTest.java lines 129-133</a>.</div>
+      </article>
+
+      <article class="slide">
+        <h2>13. Quick Review Questions</h2>
+        <ol>
+          <li>What does a state machine help the robot do?</li>
+          <li>Why does the robot call <code>odo.update()</code> inside the loop?</li>
+          <li>What are the three parts of a <code>Pose2D</code> target?</li>
+          <li>What does <code>DriveTo(...)</code> return when the robot reaches a target?</li>
+          <li>Why is telemetry useful?</li>
+        </ol>
+        <div class="callout">Answer key: one job at a time; refresh position; X/Y/heading; true; it shows what the robot is doing.</div>
+      </article>
+    </section>
+
+    <aside>
+      <div class="nav-buttons">
+        <button type="button" class="secondary" id="prev">Back</button>
+        <button type="button" id="next">Next</button>
+      </div>
+      <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+      <p id="counter">Slide 1 of 13</p>
+      <div class="toc" id="toc"></div>
+    </aside>
+  </main>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const prevButton = document.getElementById('prev');
+    const nextButton = document.getElementById('next');
+    const progressBar = document.getElementById('progressBar');
+    const counter = document.getElementById('counter');
+    const toc = document.getElementById('toc');
+    let slideIndex = 0;
+
+    slides.forEach((slide, index) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.textContent = slide.querySelector('h2').textContent;
+      button.addEventListener('click', () => showSlide(index));
+      toc.appendChild(button);
+    });
+
+    function showSlide(index) {
+      slideIndex = Math.max(0, Math.min(index, slides.length - 1));
+      slides.forEach((slide, i) => slide.classList.toggle('active', i === slideIndex));
+      Array.from(toc.children).forEach((button, i) => button.classList.toggle('current', i === slideIndex));
+      prevButton.disabled = slideIndex === 0;
+      nextButton.disabled = slideIndex === slides.length - 1;
+      progressBar.style.width = `${((slideIndex + 1) / slides.length) * 100}%`;
+      counter.textContent = `Slide ${slideIndex + 1} of ${slides.length}`;
+      if (slideIndex === 0) animateRobot(document.getElementById('robotIntro'), 0);
+      if (slideIndex === 3) animateRobot(document.getElementById('robotTargets'), 0);
+    }
+
+    prevButton.addEventListener('click', () => showSlide(slideIndex - 1));
+    nextButton.addEventListener('click', () => showSlide(slideIndex + 1));
+    document.addEventListener('keydown', event => {
+      if (event.key === 'ArrowRight') showSlide(slideIndex + 1);
+      if (event.key === 'ArrowLeft') showSlide(slideIndex - 1);
+    });
+
+    const pathSteps = [
+      { left: 9, bottom: 9, angle: 0, text: 'Start at X=0, Y=0, Heading=0 degrees.' },
+      { left: 91, bottom: 9, angle: 0, text: 'Target 1: Drive to X=400, Y=0, still facing 0 degrees.' },
+      { left: 91, bottom: 9, angle: -90, text: 'Target 2: Stay at the same spot, rotate to 90 degrees.' },
+      { left: 91, bottom: 91, angle: -90, text: 'Target 3: Drive to X=400, Y=400, still facing 90 degrees.' },
+      { left: 91, bottom: 91, angle: -180, text: 'Target 4: Stay at the same spot, rotate to -180 degrees.' },
+      { left: 9, bottom: 91, angle: -180, text: 'Target 5: Drive to X=0, Y=400, facing -180 degrees.' }
+    ];
+
+    let moveIndex = 0;
+    const robotPath = document.getElementById('robotPath');
+    const moveText = document.getElementById('moveText');
+    const nextMove = document.getElementById('nextMove');
+    const resetMove = document.getElementById('resetMove');
+
+    function animateRobot(robot, index) {
+      if (!robot) return;
+      const step = pathSteps[index];
+      robot.style.left = `${step.left}%`;
+      robot.style.bottom = `${step.bottom}%`;
+      robot.style.transform = `translate(-50%, 50%) rotate(${step.angle}deg)`;
+    }
+
+    function updateMove() {
+      animateRobot(robotPath, moveIndex);
+      moveText.innerHTML = `<span class="big-number">${moveIndex}</span><br>${pathSteps[moveIndex].text}`;
+      nextMove.disabled = moveIndex === pathSteps.length - 1;
+    }
+
+    nextMove.addEventListener('click', () => {
+      moveIndex = Math.min(moveIndex + 1, pathSteps.length - 1);
+      updateMove();
+    });
+
+    resetMove.addEventListener('click', () => {
+      moveIndex = 0;
+      updateMove();
+    });
+
+    const playStates = document.getElementById('playStates');
+    const stateCards = Array.from(document.querySelectorAll('#stateMachine .state'));
+    playStates.addEventListener('click', () => {
+      stateCards.forEach(card => card.classList.remove('active-state'));
+      stateCards.forEach((card, index) => {
+        setTimeout(() => {
+          stateCards.forEach(inner => inner.classList.remove('active-state'));
+          card.classList.add('active-state');
+        }, index * 650);
+      });
+    });
+
+    showSlide(0);
+    updateMove();
+    setTimeout(() => animateRobot(document.getElementById('robotIntro'), 1), 500);
+    setTimeout(() => animateRobot(document.getElementById('robotIntro'), 3), 1500);
+    setTimeout(() => animateRobot(document.getElementById('robotIntro'), 5), 2500);
+  </script>
+</body>
+</html>
