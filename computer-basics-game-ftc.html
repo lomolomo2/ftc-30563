@@ -1,0 +1,2092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Computer Basics for Gamers and FTC Robotics</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg0: #07091a;
+      --bg1: #0d1230;
+      --bg2: #141a3f;
+      --panel: rgba(15, 22, 53, 0.78);
+      --panel-strong: rgba(22, 30, 70, 0.92);
+      --line: rgba(167, 221, 255, 0.18);
+      --text: #f4f7ff;
+      --muted: #bac4df;
+      --soft: #8f9cc0;
+      --cyan: #54f0ff;
+      --violet: #a779ff;
+      --pink: #ff5dc8;
+      --lime: #9dff7a;
+      --gold: #ffd166;
+      --danger: #ff7070;
+      --shadow: 0 22px 70px rgba(0, 0, 0, 0.38);
+      --nav-width: 280px;
+      --topbar: 58px;
+      --radius: 8px;
+      --font-title: "Trebuchet MS", "Segoe UI", Verdana, sans-serif;
+      --font-body: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --font-code: "Cascadia Code", "JetBrains Mono", "Fira Code", Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg0);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: var(--font-body);
+      line-height: 1.62;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(84, 240, 255, 0.18), transparent 28rem),
+        radial-gradient(circle at 86% 14%, rgba(255, 93, 200, 0.13), transparent 26rem),
+        radial-gradient(circle at 70% 70%, rgba(157, 255, 122, 0.08), transparent 23rem),
+        linear-gradient(145deg, var(--bg0), var(--bg1) 45%, #10081e);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -2;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.75), transparent 80%);
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      opacity: 0.26;
+      background:
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.04), rgba(255,255,255,0.04) 1px, transparent 1px, transparent 5px);
+      mix-blend-mode: overlay;
+    }
+
+    button, input {
+      font: inherit;
+    }
+
+    button {
+      color: inherit;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .topbar {
+      position: fixed;
+      inset: 0 0 auto 0;
+      height: var(--topbar);
+      z-index: 50;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 18px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(7, 9, 26, 0.84);
+      backdrop-filter: blur(18px);
+    }
+
+    .menu-btn, .share-btn, .nav-arrow, .copy-btn, .answer-btn, .start-btn {
+      border: 1px solid rgba(84, 240, 255, 0.34);
+      background: linear-gradient(180deg, rgba(84, 240, 255, 0.16), rgba(167, 121, 255, 0.1));
+      border-radius: var(--radius);
+      min-height: 38px;
+      cursor: pointer;
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+    }
+
+    .menu-btn:hover, .share-btn:hover, .nav-arrow:hover, .copy-btn:hover, .answer-btn:hover, .start-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(84, 240, 255, 0.8);
+      box-shadow: 0 10px 26px rgba(84, 240, 255, 0.12);
+    }
+
+    .menu-btn {
+      display: none;
+      width: 42px;
+      padding: 0;
+      font-size: 1.2rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      font-family: var(--font-title);
+      font-weight: 900;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 8px;
+      background: conic-gradient(from 140deg, var(--cyan), var(--violet), var(--pink), var(--lime), var(--cyan));
+      color: #07101d;
+      box-shadow: 0 0 26px rgba(84, 240, 255, 0.22);
+    }
+
+    .progress-wrap {
+      display: grid;
+      grid-template-columns: minmax(120px, 1fr) auto;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 9px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
+    }
+
+    .progress-fill {
+      width: 3.33%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--cyan), var(--violet), var(--pink));
+      box-shadow: 0 0 18px rgba(84, 240, 255, 0.7);
+      transition: width 220ms ease;
+    }
+
+    .progress-label {
+      color: var(--muted);
+      font-family: var(--font-code);
+      font-size: 0.86rem;
+      white-space: nowrap;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .share-btn {
+      padding: 0 13px;
+      color: var(--text);
+    }
+
+    .side-nav {
+      position: fixed;
+      z-index: 45;
+      left: 0;
+      top: var(--topbar);
+      bottom: 0;
+      width: var(--nav-width);
+      padding: 18px 12px 24px;
+      overflow-y: auto;
+      border-right: 1px solid var(--line);
+      background: rgba(7, 9, 26, 0.72);
+      backdrop-filter: blur(18px);
+    }
+
+    .nav-title {
+      color: var(--soft);
+      font-family: var(--font-code);
+      font-size: 0.78rem;
+      margin: 0 8px 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .toc {
+      display: grid;
+      gap: 4px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .toc button {
+      width: 100%;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 8px;
+      align-items: center;
+      min-height: 38px;
+      padding: 7px 8px;
+      text-align: left;
+      line-height: 1.22;
+      font-size: 0.88rem;
+    }
+
+    .toc button:hover {
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+    }
+
+    .toc button.active {
+      border-color: rgba(84, 240, 255, 0.38);
+      background: linear-gradient(90deg, rgba(84,240,255,0.16), rgba(255,93,200,0.08));
+      color: var(--text);
+    }
+
+    .toc-num {
+      display: inline-grid;
+      place-items: center;
+      width: 28px;
+      height: 26px;
+      border-radius: 7px;
+      color: #07101d;
+      background: var(--cyan);
+      font-family: var(--font-code);
+      font-weight: 900;
+      font-size: 0.76rem;
+    }
+
+    .main {
+      margin-left: var(--nav-width);
+      padding-top: var(--topbar);
+    }
+
+    .lesson-section {
+      min-height: calc(100svh - var(--topbar));
+      position: relative;
+      display: grid;
+      align-items: center;
+      padding: clamp(28px, 5vw, 72px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      overflow: hidden;
+      scroll-margin-top: var(--topbar);
+    }
+
+    .lesson-section::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background:
+        radial-gradient(circle at var(--x, 72%) var(--y, 26%), color-mix(in srgb, var(--accent) 28%, transparent), transparent 26rem),
+        linear-gradient(125deg, rgba(255,255,255,0.025), transparent 45%);
+      opacity: 0.9;
+    }
+
+    .lesson-section::after {
+      content: attr(data-icon);
+      position: absolute;
+      right: clamp(12px, 5vw, 74px);
+      bottom: clamp(4px, 6vw, 58px);
+      z-index: -1;
+      font-size: clamp(5rem, 15vw, 15rem);
+      line-height: 1;
+      opacity: 0.085;
+      filter: saturate(1.4);
+    }
+
+    .section-inner {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 520ms ease, transform 520ms ease;
+    }
+
+    .lesson-section.in-view .section-inner {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .kicker {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: var(--muted);
+      font-family: var(--font-code);
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+    }
+
+    .part-pill {
+      border: 1px solid color-mix(in srgb, var(--accent) 48%, transparent);
+      border-radius: 999px;
+      padding: 4px 10px;
+      color: var(--accent);
+      background: color-mix(in srgb, var(--accent) 10%, transparent);
+    }
+
+    h1, h2, h3 {
+      font-family: var(--font-title);
+      line-height: 1.04;
+      letter-spacing: 0;
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 980px;
+      font-size: clamp(3.3rem, 8vw, 7.8rem);
+      text-transform: uppercase;
+      text-wrap: balance;
+      text-shadow: 0 0 34px color-mix(in srgb, var(--accent) 24%, transparent);
+    }
+
+    h2 {
+      max-width: 940px;
+      font-size: clamp(2.3rem, 5.2vw, 5.6rem);
+      text-wrap: balance;
+    }
+
+    h3 {
+      font-size: clamp(1.12rem, 2vw, 1.55rem);
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .subtitle {
+      max-width: 770px;
+      color: var(--muted);
+      font-size: clamp(1.13rem, 2vw, 1.4rem);
+      margin: 18px 0 0;
+      text-wrap: balance;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.04fr) minmax(320px, 0.74fr);
+      gap: clamp(18px, 3vw, 34px);
+      align-items: start;
+      margin-top: clamp(22px, 4vw, 42px);
+    }
+
+    .concept-stack {
+      display: grid;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .block {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: clamp(16px, 2.4vw, 24px);
+      background: linear-gradient(180deg, rgba(255,255,255,0.075), rgba(255,255,255,0.038));
+      box-shadow: var(--shadow);
+    }
+
+    .hook {
+      border-color: color-mix(in srgb, var(--accent) 42%, transparent);
+      background:
+        linear-gradient(135deg, color-mix(in srgb, var(--accent) 15%, transparent), rgba(255,255,255,0.042)),
+        rgba(255,255,255,0.04);
+    }
+
+    .hook p, .block p {
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(1.02rem, 1.55vw, 1.15rem);
+    }
+
+    .hook p strong, .block p strong, .highlight {
+      color: var(--text);
+      background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 24%, transparent), rgba(255,255,255,0));
+      border-radius: 5px;
+      padding: 1px 5px;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+    }
+
+    .takeaway {
+      position: relative;
+      overflow: hidden;
+      border-color: color-mix(in srgb, var(--accent) 58%, transparent);
+      background:
+        linear-gradient(90deg, color-mix(in srgb, var(--accent) 22%, transparent), rgba(255,255,255,0.055)),
+        rgba(255,255,255,0.05);
+    }
+
+    .takeaway::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 5px;
+      background: var(--accent);
+      box-shadow: 0 0 22px var(--accent);
+    }
+
+    .takeaway p {
+      color: var(--text);
+      font-weight: 750;
+      padding-left: 10px;
+    }
+
+    .example-panel {
+      display: grid;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .visual {
+      min-height: 190px;
+      border: 1px solid color-mix(in srgb, var(--accent) 36%, transparent);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(160deg, color-mix(in srgb, var(--accent) 14%, transparent), rgba(255,255,255,0.045)),
+        rgba(8, 12, 32, 0.66);
+      box-shadow: var(--shadow);
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .visual-title {
+      font-family: var(--font-code);
+      color: var(--accent);
+      font-size: 0.86rem;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .chip-row, .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border: 1px solid rgba(255,255,255,0.13);
+      border-radius: 999px;
+      padding: 7px 10px;
+      color: var(--text);
+      background: rgba(255,255,255,0.07);
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 9px;
+      align-items: stretch;
+      margin-top: 12px;
+    }
+
+    .flow div {
+      min-height: 74px;
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 8px;
+      background: rgba(255,255,255,0.055);
+      font-weight: 800;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .stat {
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      padding: 12px;
+      background: rgba(255,255,255,0.055);
+    }
+
+    .stat strong {
+      display: block;
+      color: var(--accent);
+      font-family: var(--font-code);
+      font-size: 0.86rem;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .code-card {
+      border: 1px solid rgba(84, 240, 255, 0.22);
+      border-radius: var(--radius);
+      background: #070b18;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .code-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 10px 9px 14px;
+      background: linear-gradient(90deg, rgba(84,240,255,0.13), rgba(167,121,255,0.08));
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      color: var(--muted);
+      font-family: var(--font-code);
+      font-size: 0.82rem;
+    }
+
+    .copy-btn {
+      min-height: 30px;
+      padding: 0 10px;
+      font-size: 0.78rem;
+      font-family: var(--font-code);
+    }
+
+    pre {
+      margin: 0;
+      padding: 15px;
+      overflow-x: auto;
+      font-family: var(--font-code);
+      font-size: clamp(0.78rem, 1.35vw, 0.92rem);
+      line-height: 1.58;
+      color: #e8edff;
+      tab-size: 2;
+    }
+
+    .tok-key { color: #ff8bd9; font-weight: 800; }
+    .tok-type { color: #64efff; font-weight: 800; }
+    .tok-str { color: #ffe083; }
+    .tok-num { color: #9dff7a; }
+    .tok-comment { color: #7890ad; font-style: italic; }
+    .tok-ann { color: #c99cff; font-weight: 800; }
+
+    details.ai-card {
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,0.055);
+      overflow: hidden;
+    }
+
+    details.ai-card[open] {
+      background: rgba(255,255,255,0.075);
+    }
+
+    .ai-card summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      font-weight: 900;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .ai-card summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .ai-card summary::after {
+      content: "+";
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 7px;
+      background: color-mix(in srgb, var(--accent) 16%, transparent);
+      color: var(--accent);
+      font-family: var(--font-code);
+    }
+
+    .ai-card[open] summary::after {
+      content: "-";
+    }
+
+    .ai-body {
+      padding: 0 16px 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .prompt-list {
+      display: grid;
+      gap: 9px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .prompt {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: start;
+      border: 1px solid rgba(255,255,255,0.11);
+      border-radius: 8px;
+      padding: 10px;
+      background: rgba(0,0,0,0.2);
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .tag {
+      border: 1px solid color-mix(in srgb, var(--accent) 36%, transparent);
+      border-radius: 999px;
+      padding: 6px 9px;
+      background: color-mix(in srgb, var(--accent) 10%, transparent);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.86rem;
+      font-weight: 750;
+    }
+
+    .tag:hover {
+      border-color: var(--accent);
+    }
+
+    .nav-arrows {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 55;
+      display: flex;
+      gap: 8px;
+    }
+
+    .nav-arrow {
+      width: 46px;
+      height: 46px;
+      font-size: 1.3rem;
+      background: rgba(7, 9, 26, 0.78);
+      backdrop-filter: blur(10px);
+    }
+
+    .start-btn {
+      margin-top: 26px;
+      min-height: 50px;
+      padding: 0 22px;
+      border-color: color-mix(in srgb, var(--accent) 72%, white 12%);
+      background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 38%, #10162e), rgba(255,93,200,0.24));
+      color: var(--text);
+      font-weight: 950;
+      font-size: 1.02rem;
+    }
+
+    .hero-orbit {
+      width: min(560px, 100%);
+      aspect-ratio: 1;
+      margin: 0 auto;
+      position: relative;
+      display: grid;
+      place-items: center;
+    }
+
+    .core-cube {
+      width: 38%;
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      border: 2px solid rgba(84,240,255,0.6);
+      border-radius: 18px;
+      background: linear-gradient(145deg, rgba(84,240,255,0.18), rgba(255,93,200,0.12));
+      box-shadow: 0 0 60px rgba(84,240,255,0.22), inset 0 0 28px rgba(255,255,255,0.08);
+      font-size: clamp(3rem, 8vw, 5rem);
+      animation: floaty 5s ease-in-out infinite;
+    }
+
+    .orbit-item {
+      position: absolute;
+      width: 94px;
+      height: 94px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.075);
+      box-shadow: var(--shadow);
+      font-size: 2.15rem;
+    }
+
+    .orbit-item:nth-child(2) { top: 5%; left: 40%; }
+    .orbit-item:nth-child(3) { top: 38%; right: 2%; }
+    .orbit-item:nth-child(4) { bottom: 7%; left: 48%; }
+    .orbit-item:nth-child(5) { top: 42%; left: 2%; }
+
+    @keyframes floaty {
+      0%, 100% { transform: translateY(0) rotate(-2deg); }
+      50% { transform: translateY(-12px) rotate(2deg); }
+    }
+
+    .loop-viz {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+      position: relative;
+    }
+
+    .loop-step {
+      min-height: 82px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.055);
+      font-weight: 850;
+      transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
+    }
+
+    .loop-step.active {
+      background: color-mix(in srgb, var(--accent) 20%, rgba(255,255,255,0.055));
+      border-color: var(--accent);
+      transform: translateY(-3px);
+      box-shadow: 0 0 22px color-mix(in srgb, var(--accent) 30%, transparent);
+    }
+
+    .bot-track {
+      margin-top: 18px;
+      height: 44px;
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 999px;
+      background: rgba(0,0,0,0.24);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bot {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #07101d;
+      transition: transform 280ms ease;
+    }
+
+    .challenge-board {
+      display: grid;
+      gap: 12px;
+    }
+
+    .challenge {
+      border: 1px solid rgba(255,255,255,0.13);
+      border-radius: 8px;
+      padding: 13px;
+      background: rgba(255,255,255,0.055);
+    }
+
+    .challenge p {
+      margin: 0 0 10px;
+      color: var(--text);
+      font-weight: 760;
+    }
+
+    .challenge-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 8px;
+    }
+
+    .challenge input {
+      width: 100%;
+      min-height: 40px;
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 8px;
+      background: rgba(0,0,0,0.25);
+      color: var(--text);
+      padding: 0 10px;
+    }
+
+    .answer-btn {
+      padding: 0 11px;
+      min-height: 40px;
+    }
+
+    .feedback {
+      min-height: 24px;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 22px;
+      transform: translateX(-50%) translateY(20px);
+      z-index: 80;
+      border: 1px solid rgba(84, 240, 255, 0.34);
+      border-radius: 999px;
+      background: rgba(7, 9, 26, 0.9);
+      color: var(--text);
+      padding: 10px 15px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 180ms ease, transform 180ms ease;
+      box-shadow: var(--shadow);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .drawer-backdrop {
+      display: none;
+      position: fixed;
+      inset: var(--topbar) 0 0;
+      z-index: 40;
+      background: rgba(0,0,0,0.5);
+    }
+
+    @media (max-width: 980px) {
+      :root {
+        --nav-width: 0px;
+      }
+
+      .menu-btn {
+        display: inline-grid;
+        place-items: center;
+      }
+
+      .brand span:last-child {
+        display: none;
+      }
+
+      .side-nav {
+        width: min(86vw, 320px);
+        transform: translateX(-105%);
+        transition: transform 220ms ease;
+      }
+
+      body.nav-open .side-nav {
+        transform: translateX(0);
+      }
+
+      body.nav-open .drawer-backdrop {
+        display: block;
+      }
+
+      .main {
+        margin-left: 0;
+      }
+
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-orbit {
+        width: min(460px, 100%);
+      }
+    }
+
+    @media (max-width: 640px) {
+      :root {
+        --topbar: 54px;
+      }
+
+      .topbar {
+        grid-template-columns: auto auto 1fr auto;
+        gap: 8px;
+        padding: 8px 10px;
+      }
+
+      .progress-wrap {
+        grid-column: 3 / 4;
+        gap: 7px;
+      }
+
+      .progress-label {
+        font-size: 0.7rem;
+      }
+
+      .share-btn {
+        width: 39px;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      .share-btn::before {
+        content: "↗";
+      }
+
+      .share-btn span {
+        display: none;
+      }
+
+      .lesson-section {
+        min-height: auto;
+        padding: 30px 16px 72px;
+      }
+
+      h1 {
+        font-size: clamp(2.7rem, 15vw, 4.4rem);
+      }
+
+      h2 {
+        font-size: clamp(2rem, 11vw, 3.15rem);
+      }
+
+      .flow, .loop-viz {
+        grid-template-columns: 1fr;
+      }
+
+      .stat-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .challenge-row {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-arrows {
+        right: 10px;
+        bottom: 10px;
+      }
+
+      .nav-arrow {
+        width: 42px;
+        height: 42px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar" aria-label="Lesson navigation">
+    <button class="menu-btn" id="menuBtn" aria-label="Open table of contents">☰</button>
+    <div class="brand" aria-label="Computer Basics">
+      <span class="brand-mark">⌘</span>
+      <span>Game Code Robot</span>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-label" id="progressLabel">01 / 30</div>
+    </div>
+    <div class="top-actions">
+      <button class="share-btn" id="shareBtn"><span>Share</span></button>
+    </div>
+  </header>
+
+  <div class="drawer-backdrop" id="drawerBackdrop" aria-hidden="true"></div>
+  <aside class="side-nav" id="sideNav" aria-label="Table of contents">
+    <p class="nav-title">Mission Map</p>
+    <ol class="toc" id="toc"></ol>
+  </aside>
+
+  <main class="main" id="main"></main>
+
+  <div class="nav-arrows" aria-label="Section controls">
+    <button class="nav-arrow" id="prevBtn" aria-label="Previous section">↑</button>
+    <button class="nav-arrow" id="nextBtn" aria-label="Next section">↓</button>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const lessonSections = [
+      {
+        title: "Computer Basics: Games, Code, and Robots",
+        part: "Opening",
+        icon: "🎮",
+        accent: "#54f0ff",
+        hook: "What do Minecraft and your FTC robot have in common? Both turn inputs into decisions, store information, and create outputs you can see, hear, or feel.",
+        concept: "A computer is not just a laptop. A computer is any machine that can take information in, follow instructions, remember data, and create a result.",
+        example: "A game console draws a world on a screen. An FTC Control Hub reads sensors and commands motors. The jobs look different, but the pattern is the same.",
+        takeaway: "Games and robots are two versions of the same big idea: input, logic, memory, output.",
+        visual: "hero",
+        cta: true,
+        prompts: [
+          "Explain computers using Minecraft, Roblox, and FTC robotics examples for a 7th grader.",
+          "Give me five everyday objects that are secretly computers.",
+          "What does an FTC Control Hub do in simple words?"
+        ],
+        tags: ["computer", "FTC", "games", "input-output"]
+      },
+      {
+        title: "Roadmap: Your Quest Log",
+        part: "Opening",
+        icon: "🗺️",
+        accent: "#a779ff",
+        hook: "In a game, a quest log tells you where you are going. This lesson is your quest log for understanding computers.",
+        concept: "You will learn hardware, software, Java code, and how a button press becomes action. Each section connects a game idea to an FTC robotics idea.",
+        example: "When you press a controller button in Fortnite, your character jumps. When you press A on an FTC gamepad, your robot might grab a pixel, lift an arm, or start intake wheels.",
+        takeaway: "By the end, you should be able to explain what is inside a computer and why Java code can control a real robot.",
+        visual: "flow",
+        chips: ["Hardware", "Software", "Java", "Loops", "Debugging", "Careers"],
+        prompts: [
+          "Make a study plan for learning computer basics through games and robotics.",
+          "What should I learn first if I want to code an FTC robot?",
+          "Explain why computer hardware and software need each other."
+        ],
+        tags: ["roadmap", "hardware", "software", "Java"]
+      },
+      {
+        title: "A Console, Phone, and FTC Control Hub Are All Computers",
+        part: "What Is a Computer?",
+        icon: "📱",
+        accent: "#ff5dc8",
+        hook: "A Nintendo Switch, your phone, a Chromebook, and an FTC Control Hub look nothing alike. They still belong to the same family.",
+        concept: "A computer is a programmable system. If it can run instructions and respond to data, it counts.",
+        example: "Your phone runs apps. A console runs games. The FTC Control Hub runs Android and executes your OpMode code to control robot hardware.",
+        takeaway: "Do not judge a computer by its shape. Judge it by what it does with information.",
+        visual: "chips",
+        chips: ["Game Console", "Phone", "Laptop", "FTC Control Hub", "Smart TV", "Calculator"],
+        prompts: [
+          "Why is an FTC Control Hub considered a computer?",
+          "Compare a phone and a game console as computers.",
+          "What makes something programmable?"
+        ],
+        tags: ["programmable", "Control Hub", "Android", "apps"]
+      },
+      {
+        title: "Input → Process → Storage → Output",
+        part: "What Is a Computer?",
+        icon: "🔁",
+        accent: "#9dff7a",
+        hook: "A gamepad button is not magic. It starts a chain reaction.",
+        concept: "Computers follow a cycle: receive input, process it with instructions, use storage or memory, then produce output.",
+        example: "Game: controller input → game logic → saved player data → screen/audio output. FTC: gamepad or sensor input → Java OpMode logic → variables/hardware settings → motor or telemetry output.",
+        takeaway: "If you can trace input to output, you can understand almost any computer system.",
+        visual: "flow",
+        chips: ["Input", "Process", "Storage", "Output"],
+        prompts: [
+          "Trace what happens when I press jump in a game using input-process-output.",
+          "Trace what happens when an FTC distance sensor sees a wall.",
+          "Give me three examples of input and output devices."
+        ],
+        tags: ["input", "process", "storage", "output"]
+      },
+      {
+        title: "Hardware vs Software",
+        part: "What Is a Computer?",
+        icon: "🧱",
+        accent: "#ffd166",
+        hook: "A robot chassis without code just sits there. Code without motors cannot move anything.",
+        concept: "Hardware is the physical stuff you can touch. Software is the instructions that tell the hardware what to do.",
+        example: "FTC hardware includes metal beams, motors, servos, sensors, wires, batteries, and the Control Hub. FTC software includes your Java OpMode and the FTC Driver Station app.",
+        takeaway: "Hardware is the body. Software is the plan. A working robot needs both.",
+        visual: "stats",
+        stats: [
+          ["Hardware", "Motors, sensors, phone, Control Hub"],
+          ["Software", "Apps, games, operating systems, Java OpModes"]
+        ],
+        prompts: [
+          "Explain hardware vs software using a Minecraft world.",
+          "Which parts of an FTC robot are hardware and which parts are software?",
+          "Can software fix bad hardware? Give examples."
+        ],
+        tags: ["hardware", "software", "robot", "instructions"]
+      },
+      {
+        title: "CPU: The Decision Engine",
+        part: "Hardware Deep Dive",
+        icon: "🧠",
+        accent: "#54f0ff",
+        hook: "When a game calculates enemy movement or your robot decides whether to turn, the CPU is busy.",
+        concept: "The CPU, or Central Processing Unit, is the main chip that runs instructions. It handles logic, math, timing, and decisions.",
+        example: "In a game, the CPU updates physics and player actions. In FTC, the Control Hub processor runs your Java code over and over during TeleOp or Autonomous.",
+        takeaway: "The CPU is not the whole computer, but it is the part that keeps asking: what instruction should happen next?",
+        visual: "stats",
+        stats: [
+          ["Game CPU job", "AI, physics, inventory, network messages"],
+          ["FTC CPU job", "Read sensors, run OpMode logic, command motors"]
+        ],
+        prompts: [
+          "Explain CPU like it is a game referee.",
+          "What does the CPU do in an FTC Control Hub?",
+          "Why can a slow CPU make a game or robot feel delayed?"
+        ],
+        tags: ["CPU", "processor", "logic", "Control Hub"]
+      },
+      {
+        title: "GPU: The 3D World Builder",
+        part: "Hardware Deep Dive",
+        icon: "🕹️",
+        accent: "#ff5dc8",
+        hook: "Minecraft shaders, Fortnite skins, and Genshin Impact worlds need a lot of drawing power.",
+        concept: "The GPU, or Graphics Processing Unit, is specialized for drawing many pixels and 3D shapes at once.",
+        example: "A gaming PC needs a strong GPU for high resolution and smooth frame rates. An FTC robot usually does not need a powerful GPU because it mostly controls motors and sensors, not fancy 3D graphics.",
+        takeaway: "GPUs make games look smooth. FTC robots care more about reliable control than beautiful graphics.",
+        visual: "stats",
+        stats: [
+          ["GPU loves", "Pixels, shaders, 3D models, lighting"],
+          ["FTC usually loves", "Sensors, motors, timing, Java logic"]
+        ],
+        prompts: [
+          "Why do 3D games need GPUs?",
+          "Why does an FTC robot not need a gaming GPU?",
+          "Compare CPU and GPU using Roblox examples."
+        ],
+        tags: ["GPU", "graphics", "FPS", "3D"]
+      },
+      {
+        title: "RAM: The Fast Workspace",
+        part: "Hardware Deep Dive",
+        icon: "⚡",
+        accent: "#a779ff",
+        hook: "When a game stutters while loading a huge world, memory might be part of the problem.",
+        concept: "RAM is short-term memory. It holds data the computer needs right now because it is much faster than long-term storage.",
+        example: "A game keeps the current map, enemies, textures, and player state in RAM. The FTC Control Hub uses memory for Android, the FTC app, sensor data, variables, and your running OpMode.",
+        takeaway: "RAM is like a workbench. Bigger and faster workbenches help the computer keep active tasks nearby.",
+        visual: "chips",
+        chips: ["Current world", "Player position", "Sensor readings", "Variables", "Running apps"],
+        prompts: [
+          "Explain RAM using a gaming backpack or workbench analogy.",
+          "What happens if a computer does not have enough RAM?",
+          "What kinds of FTC robot data might live in RAM?"
+        ],
+        tags: ["RAM", "memory", "variables", "lag"]
+      },
+      {
+        title: "Storage: SSD vs HDD",
+        part: "Hardware Deep Dive",
+        icon: "💾",
+        accent: "#ffd166",
+        hook: "Why does one computer load a game in 8 seconds while another takes forever?",
+        concept: "Storage is long-term memory. SSDs are fast electronic storage. HDDs use spinning magnetic disks and are usually slower.",
+        example: "Games, screenshots, saves, and apps live in storage. On FTC, your robot code is deployed to the Robot Controller device, where it can be launched later.",
+        takeaway: "Storage remembers after power is off. RAM is fast and temporary; storage is slower and permanent.",
+        visual: "stats",
+        stats: [
+          ["SSD", "Fast loading, no moving parts"],
+          ["HDD", "Usually cheaper per GB, mechanical parts"],
+          ["FTC code", "Deployed and stored on the Robot Controller"],
+          ["Game saves", "Stored so your progress survives"]
+        ],
+        prompts: [
+          "Explain SSD vs HDD for someone who plays games.",
+          "Where does FTC robot code go after I deploy it?",
+          "What is the difference between RAM and storage?"
+        ],
+        tags: ["SSD", "HDD", "storage", "deploy"]
+      },
+      {
+        title: "Sensors: The Robot's Senses",
+        part: "Hardware Deep Dive",
+        icon: "📡",
+        accent: "#9dff7a",
+        hook: "In games, the engine knows where enemies and walls are. A real robot has to measure the real world.",
+        concept: "Sensors turn physical information into data the computer can use.",
+        example: "FTC robots can use color sensors, distance sensors, an IMU for orientation, and motor encoders to measure wheel movement.",
+        takeaway: "Sensors are how robot code stops guessing and starts reacting to reality.",
+        visual: "chips",
+        chips: ["ColorSensor", "DistanceSensor", "IMU", "Encoders", "Touch Sensor"],
+        code: [{
+          title: "Reading FTC sensors",
+          text: `ColorSensor colorSensor = hardwareMap.get(ColorSensor.class, "color");
+DistanceSensor distanceSensor = hardwareMap.get(DistanceSensor.class, "distance");
+
+double inches = distanceSensor.getDistance(DistanceUnit.INCH);
+int red = colorSensor.red();
+
+telemetry.addData("Distance", inches);
+telemetry.addData("Red", red);
+telemetry.update();`
+        }],
+        prompts: [
+          "Explain FTC sensors as robot senses.",
+          "What does an IMU measure on an FTC robot?",
+          "How are motor encoders like measuring wheel steps?"
+        ],
+        tags: ["ColorSensor", "DistanceSensor", "IMU", "encoders"]
+      },
+      {
+        title: "Motors and Actuators",
+        part: "Hardware Deep Dive",
+        icon: "⚙️",
+        accent: "#54f0ff",
+        hook: "A controller button only matters if something in the world changes.",
+        concept: "Actuators are parts that create motion. In FTC, the most common actuators are DC motors and servos.",
+        example: "A DC motor can spin a wheel or lift. A servo moves to a specific position, like opening a claw.",
+        takeaway: "Sensors bring data in. Motors and servos send action out.",
+        visual: "stats",
+        stats: [
+          ["DcMotor", "Continuous spinning with power from -1.0 to 1.0"],
+          ["Servo", "Moves to a position, usually 0.0 to 1.0"]
+        ],
+        code: [{
+          title: "Motor and servo commands",
+          text: `DcMotor leftDrive = hardwareMap.get(DcMotor.class, "left_drive");
+Servo claw = hardwareMap.get(Servo.class, "claw");
+
+leftDrive.setPower(0.5);
+claw.setPosition(0.8);`
+        }],
+        prompts: [
+          "Explain the difference between a DC motor and a servo.",
+          "What FTC mechanisms might use a servo?",
+          "Why do motor powers often range from -1.0 to 1.0?"
+        ],
+        tags: ["DcMotor", "Servo", "actuator", "power"]
+      },
+      {
+        title: "Input Devices: Gamepad Power",
+        part: "Hardware Deep Dive",
+        icon: "🎛️",
+        accent: "#ff5dc8",
+        hook: "The same kind of controller idea drives a Fortnite character and an FTC robot.",
+        concept: "Input devices let humans send data to a computer. Buttons, sticks, triggers, keyboards, touchscreens, and sensors can all be inputs.",
+        example: "FTC TeleOp uses `gamepad1` and `gamepad2`. Your code reads buttons and sticks, then chooses motor power or servo position.",
+        takeaway: "A gamepad does not control hardware directly. It sends data that software interprets.",
+        visual: "chips",
+        chips: ["A button", "Left stick", "Right trigger", "D-pad", "Touchscreen", "Keyboard"],
+        code: [{
+          title: "Reading an FTC gamepad",
+          text: `double drive = -gamepad1.left_stick_y;
+double turn = gamepad1.right_stick_x;
+
+if (gamepad1.a) {
+    telemetry.addData("Button", "A is pressed");
+}`
+        }],
+        prompts: [
+          "How is an FTC gamepad like a video game controller?",
+          "What data does a joystick send to software?",
+          "Explain why code must read gamepad values repeatedly."
+        ],
+        tags: ["gamepad1", "input", "joystick", "TeleOp"]
+      },
+      {
+        title: "Network: Lag, Wi-Fi, and Robot Control",
+        part: "Hardware Deep Dive",
+        icon: "📶",
+        accent: "#a779ff",
+        hook: "Lag in a game feels like your character is stuck in the past. Robot lag can feel just as strange.",
+        concept: "A network lets computers send data to each other. Speed, signal strength, interference, and timing all matter.",
+        example: "In FTC, the Driver Station connects to the Robot Controller through Wi-Fi Direct. Commands and telemetry travel between them.",
+        takeaway: "Networks are part of the control system. Bad communication can make good code feel broken.",
+        visual: "flow",
+        chips: ["Driver Station", "Wi-Fi Direct", "Robot Controller", "Telemetry"],
+        prompts: [
+          "Explain network lag using a multiplayer game example.",
+          "How does the FTC Driver Station talk to the robot?",
+          "What can cause wireless problems at an FTC event?"
+        ],
+        tags: ["network", "lag", "Wi-Fi Direct", "Driver Station"]
+      },
+      {
+        title: "What Is Software?",
+        part: "Software and Java Code",
+        icon: "🧩",
+        accent: "#ffd166",
+        hook: "A game disc, app icon, or robot OpMode is not just art. It is instructions.",
+        concept: "Software is a collection of instructions and data that tells hardware what to do.",
+        example: "Minecraft, Roblox Studio, the FTC Driver Station app, and your Java OpMode are all software. Some software entertains you; some controls machines.",
+        takeaway: "Software is how humans turn ideas into repeatable computer behavior.",
+        visual: "chips",
+        chips: ["Game", "App", "Operating System", "FTC OpMode", "Website"],
+        prompts: [
+          "What counts as software?",
+          "How is a game similar to FTC robot code?",
+          "Explain software as instructions for hardware."
+        ],
+        tags: ["software", "app", "OpMode", "instructions"]
+      },
+      {
+        title: "Operating Systems",
+        part: "Software and Java Code",
+        icon: "🤖",
+        accent: "#9dff7a",
+        hook: "Before a game can run, something has to manage the computer underneath it.",
+        concept: "An operating system manages hardware, apps, files, memory, networking, and user interaction.",
+        example: "Windows runs many PC games. iOS and Android run phone apps. The FTC Control Hub runs Android, and the FTC Robot Controller app runs on top of it.",
+        takeaway: "The operating system is the manager that helps apps use the machine safely and consistently.",
+        visual: "stats",
+        stats: [
+          ["Windows", "PC games, files, drivers, apps"],
+          ["Android", "FTC Control Hub, phone apps, sensors, Wi-Fi"]
+        ],
+        prompts: [
+          "Explain operating systems using a game console menu.",
+          "Why does the FTC Control Hub run Android?",
+          "What does an OS manage for apps?"
+        ],
+        tags: ["operating system", "Android", "Windows", "apps"]
+      },
+      {
+        title: "Programming Languages",
+        part: "Software and Java Code",
+        icon: "☕",
+        accent: "#54f0ff",
+        hook: "Different games and robots use different languages, like different tools in a builder's kit.",
+        concept: "A programming language is a structured way to write instructions computers can translate and run.",
+        example: "Minecraft was originally written in Java. Roblox games often use Lua. Unity games often use C#. FTC teams commonly program robots in Java.",
+        takeaway: "Languages differ, but the big ideas repeat: variables, decisions, loops, functions, and objects.",
+        visual: "chips",
+        chips: ["Java", "Lua", "C#", "Python", "JavaScript", "Blocks"],
+        prompts: [
+          "Compare Java, Lua, and C# for games and robotics.",
+          "Why does FTC use Java?",
+          "What programming ideas show up in every language?"
+        ],
+        tags: ["Java", "Lua", "C#", "FTC SDK"]
+      },
+      {
+        title: "Java Basics 1: Variables",
+        part: "Software and Java Code",
+        icon: "📦",
+        accent: "#ff5dc8",
+        hook: "Games remember your health, coins, position, and inventory. Robots remember power, distance, and target positions.",
+        concept: "A variable is a named box for data. The type tells Java what kind of data the box can hold.",
+        example: "`int motorPower = 50;` stores a whole number. FTC code often uses `double` for motor power because motor power can be decimals like 0.35.",
+        takeaway: "Variables let code remember changing information while the program runs.",
+        visual: "stats",
+        stats: [
+          ["int", "Whole numbers like 50"],
+          ["double", "Decimals like 0.75"],
+          ["boolean", "true or false"],
+          ["String", "Text like \"Ready\""]
+        ],
+        code: [{
+          title: "FTC-style variables",
+          text: `int targetTicks = 1120;
+double motorPower = 0.50;
+boolean clawOpen = false;
+String modeName = "TeleOp";
+
+telemetry.addData("Target", targetTicks);
+telemetry.addData("Power", motorPower);`
+        }],
+        prompts: [
+          "Explain Java variables using a video game inventory.",
+          "Why is FTC motor power usually a double instead of an int?",
+          "Give me ten FTC robot variables and what they could store."
+        ],
+        tags: ["variables", "int", "double", "boolean"]
+      },
+      {
+        title: "Java Basics 2: If / Else",
+        part: "Software and Java Code",
+        icon: "🚦",
+        accent: "#ffd166",
+        hook: "If your health is zero, respawn. If the robot is too close to a wall, stop.",
+        concept: "`if` statements let code choose between actions based on a condition.",
+        example: "A distance sensor can protect a robot from driving into something. The code checks a measurement, then decides what to do.",
+        takeaway: "If/else is how software makes decisions instead of doing the same thing every time.",
+        visual: "flow",
+        chips: ["Check condition", "True path", "False path", "Action"],
+        code: [{
+          title: "FTC distance decision",
+          text: `DistanceSensor distanceSensor = hardwareMap.get(DistanceSensor.class, "distance");
+DcMotor leftDrive = hardwareMap.get(DcMotor.class, "left_drive");
+DcMotor rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+
+double inches = distanceSensor.getDistance(DistanceUnit.INCH);
+
+if (inches < 10.0) {
+    leftDrive.setPower(0.0);
+    rightDrive.setPower(0.0);
+} else {
+    leftDrive.setPower(0.4);
+    rightDrive.setPower(0.4);
+}`
+        }],
+        prompts: [
+          "Explain if/else with a Fortnite or Roblox example.",
+          "Write FTC Java pseudocode that stops before a wall.",
+          "What makes a condition true or false in Java?"
+        ],
+        tags: ["if", "else", "condition", "DistanceSensor"]
+      },
+      {
+        title: "Java Basics 3: Loops",
+        part: "Software and Java Code",
+        icon: "🔄",
+        accent: "#9dff7a",
+        hook: "Games do not update once. They update again and again, many times per second.",
+        concept: "A loop repeats instructions. FTC TeleOp commonly uses a loop that keeps running while the OpMode is active.",
+        example: "Inside `while (opModeIsActive())`, FTC code reads gamepads and sensors, calculates outputs, sends motor commands, and updates telemetry.",
+        takeaway: "Loops are the heartbeat of both games and robots.",
+        visual: "loop",
+        code: [{
+          title: "FTC control loop",
+          text: `@TeleOp(name = "Loop Demo")
+public class LoopDemo extends LinearOpMode {
+    @Override
+    public void runOpMode() {
+        DcMotor leftDrive = hardwareMap.get(DcMotor.class, "left_drive");
+        DcMotor rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+
+        waitForStart();
+
+        while (opModeIsActive()) {
+            double drive = -gamepad1.left_stick_y;
+
+            leftDrive.setPower(drive);
+            rightDrive.setPower(drive);
+
+            telemetry.addData("Drive", drive);
+            telemetry.update();
+        }
+    }
+}`
+        }],
+        prompts: [
+          "Explain while loops using game frames.",
+          "Why does FTC TeleOp code need a loop?",
+          "What should happen inside a robot control loop?"
+        ],
+        tags: ["loop", "while", "opModeIsActive", "control loop"]
+      },
+      {
+        title: "Java Basics 4: Functions and Methods",
+        part: "Software and Java Code",
+        icon: "🧰",
+        accent: "#54f0ff",
+        hook: "Game developers do not rewrite the jump code every time a character jumps.",
+        concept: "A method is a named set of instructions. Methods make code reusable, readable, and easier to test.",
+        example: "Instead of repeating motor commands everywhere, an FTC team can write `driveForward(double power)` and call it when needed.",
+        takeaway: "Methods turn messy repeated instructions into named robot skills.",
+        visual: "chips",
+        chips: ["driveForward()", "openClaw()", "stopDrive()", "turnLeft()"],
+        code: [{
+          title: "Reusable FTC method",
+          text: `private DcMotor leftDrive;
+private DcMotor rightDrive;
+
+public void driveForward(double power) {
+    leftDrive.setPower(power);
+    rightDrive.setPower(power);
+}
+
+public void stopDrive() {
+    driveForward(0.0);
+}`
+        }],
+        prompts: [
+          "Explain Java methods using game abilities.",
+          "Why are methods useful in FTC robot code?",
+          "Help me design FTC methods for drivetrain, arm, and claw."
+        ],
+        tags: ["methods", "functions", "reuse", "driveForward"]
+      },
+      {
+        title: "Java Basics 5: Classes and Objects",
+        part: "Software and Java Code",
+        icon: "🏗️",
+        accent: "#a779ff",
+        hook: "In a game, each player, enemy, item, and block can be an object with its own data and behavior.",
+        concept: "A class is a blueprint. An object is a usable thing created from that blueprint.",
+        example: "`DcMotor` is a class from the FTC SDK. `leftMotor` is an object that represents one real configured motor on your robot.",
+        takeaway: "Classes describe what a thing can do. Objects are the actual things your code uses.",
+        visual: "stats",
+        stats: [
+          ["Class", "Blueprint: DcMotor, Servo, IMU"],
+          ["Object", "Specific thing: leftMotor, clawServo, imu"]
+        ],
+        code: [{
+          title: "FTC objects from hardwareMap",
+          text: `DcMotor leftMotor = hardwareMap.get(DcMotor.class, "left_drive");
+Servo clawServo = hardwareMap.get(Servo.class, "claw");
+IMU imu = hardwareMap.get(IMU.class, "imu");
+
+leftMotor.setPower(0.25);
+clawServo.setPosition(0.4);`
+        }],
+        prompts: [
+          "Explain classes and objects using Minecraft blocks or Roblox objects.",
+          "What is hardwareMap doing in FTC Java?",
+          "Why is leftMotor an object but DcMotor is a class?"
+        ],
+        tags: ["class", "object", "hardwareMap", "DcMotor"]
+      },
+      {
+        title: "OpMode Structure: Init, Start, Loop, Stop",
+        part: "Software and Java Code",
+        icon: "🏁",
+        accent: "#ff5dc8",
+        hook: "A match has phases. Your robot code has phases too.",
+        concept: "An OpMode is an FTC program the Driver Station can select and run. It has setup, start, repeated control, and stopping behavior.",
+        example: "A `@TeleOp` OpMode is used for driver control. An `@Autonomous` OpMode runs preplanned actions without driver input during the autonomous period.",
+        takeaway: "OpMode structure helps your robot behave predictably before, during, and after a match.",
+        visual: "flow",
+        chips: ["init", "start", "loop", "stop"],
+        code: [{
+          title: "FTC TeleOp OpMode skeleton",
+          text: `@TeleOp(name = "Basic TeleOp")
+public class BasicTeleOp extends OpMode {
+    private DcMotor leftDrive;
+    private DcMotor rightDrive;
+
+    @Override
+    public void init() {
+        leftDrive = hardwareMap.get(DcMotor.class, "left_drive");
+        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+    }
+
+    @Override
+    public void loop() {
+        double drive = -gamepad1.left_stick_y;
+        leftDrive.setPower(drive);
+        rightDrive.setPower(drive);
+        telemetry.addData("Drive", drive);
+    }
+
+    @Override
+    public void stop() {
+        leftDrive.setPower(0.0);
+        rightDrive.setPower(0.0);
+    }
+}`
+        }],
+        prompts: [
+          "Explain FTC OpMode lifecycle to a beginner.",
+          "What is the difference between LinearOpMode and OpMode?",
+          "When should I put code in init versus loop?"
+        ],
+        tags: ["OpMode", "TeleOp", "Autonomous", "lifecycle"]
+      },
+      {
+        title: "Game Engine vs Robot Code",
+        part: "Software and Java Code",
+        icon: "🎬",
+        accent: "#ffd166",
+        hook: "Unity and Unreal create worlds. FTC OpModes control one real machine.",
+        concept: "A game engine manages rendering, physics, input, audio, assets, and scenes. Robot code focuses on real sensors, motors, timing, and safety.",
+        example: "Unity might render a moving car at 60 FPS. FTC code might read a joystick and set two drive motors 50 times per second.",
+        takeaway: "Games simulate rules in a virtual world. Robot code applies rules to physical hardware.",
+        visual: "stats",
+        stats: [
+          ["Game engine", "Render, physics, sound, animation, scenes"],
+          ["FTC OpMode", "Read inputs, decide, command motors, show telemetry"]
+        ],
+        prompts: [
+          "Compare Unity game scripts with FTC OpMode code.",
+          "What does a game engine do that FTC code usually does not?",
+          "What does FTC robot code care about that a game may not?"
+        ],
+        tags: ["game engine", "Unity", "OpMode", "physics"]
+      },
+      {
+        title: "The Loop: Frames and Control Cycles",
+        part: "How Things Actually Run",
+        icon: "⏱️",
+        accent: "#54f0ff",
+        hook: "A smooth game might update 60 times per second. A robot control loop also repeats quickly.",
+        concept: "Many interactive systems run as repeated cycles. Each cycle reads input, updates state, and outputs the next result.",
+        example: "Game frame: read controller, update world, draw screen. FTC loop: read gamepad and sensors, calculate motor powers, send commands, update telemetry.",
+        takeaway: "Interactive software feels alive because it keeps looping fast enough for humans to control it.",
+        visual: "flow",
+        chips: ["Read", "Think", "Act", "Report"],
+        prompts: [
+          "Explain game frames and FTC loops side by side.",
+          "Why does a robot control loop need to run quickly?",
+          "What happens if the loop is too slow?"
+        ],
+        tags: ["FPS", "control cycle", "latency", "telemetry"]
+      },
+      {
+        title: "From Button Press to Robot Motion",
+        part: "How Things Actually Run",
+        icon: "➡️",
+        accent: "#9dff7a",
+        hook: "Pressing A feels instant, but many steps happen between your thumb and the motor.",
+        concept: "A complete computer action is a chain: input hardware sends data, software reads it, logic decides, output hardware moves.",
+        example: "FTC chain: gamepad button → Driver Station → Wi-Fi Direct → Robot Controller app → Java OpMode → motor controller → motor spins → mechanism moves.",
+        takeaway: "Debugging gets easier when you can point to the exact link in the chain that failed.",
+        visual: "flow",
+        chips: ["Gamepad", "Driver Station", "Wi-Fi", "OpMode", "Motor", "Motion"],
+        code: [{
+          title: "Button to claw movement",
+          text: `Servo claw = hardwareMap.get(Servo.class, "claw");
+
+if (gamepad1.a) {
+    claw.setPosition(1.0); // open
+} else if (gamepad1.b) {
+    claw.setPosition(0.0); // close
+}`
+        }],
+        prompts: [
+          "Trace every step from pressing A to an FTC servo moving.",
+          "Why might a robot not respond even if the code looks correct?",
+          "Make a troubleshooting checklist for gamepad-to-motor control."
+        ],
+        tags: ["gamepad", "servo", "Driver Station", "chain"]
+      },
+      {
+        title: "Debugging: Finding the Real Problem",
+        part: "How Things Actually Run",
+        icon: "🐞",
+        accent: "#ff5dc8",
+        hook: "A game bug might launch your character into the sky. A robot bug might spin one wheel backward.",
+        concept: "Debugging means finding, understanding, and fixing problems. Good debuggers test one idea at a time.",
+        example: "Common FTC bugs include wrong hardware names, reversed motor directions, missing `telemetry.update()`, unplugged cables, low battery, and logic that never becomes true.",
+        takeaway: "Do not guess wildly. Observe, isolate, test, and fix.",
+        visual: "chips",
+        chips: ["Read the error", "Check wiring", "Check names", "Print telemetry", "Test one part"],
+        code: [{
+          title: "Telemetry for debugging",
+          text: `telemetry.addData("A pressed", gamepad1.a);
+telemetry.addData("Left stick Y", gamepad1.left_stick_y);
+telemetry.addData("Left motor power", leftDrive.getPower());
+telemetry.update();`
+        }],
+        prompts: [
+          "Help me debug an FTC robot that will not move.",
+          "What does 'hardware device not found' mean in FTC?",
+          "Make a step-by-step FTC debugging checklist for beginners."
+        ],
+        tags: ["debugging", "telemetry", "hardware names", "errors"]
+      },
+      {
+        title: "Telemetry and Logging",
+        part: "How Things Actually Run",
+        icon: "📊",
+        accent: "#a779ff",
+        hook: "Games sometimes show FPS, ping, coordinates, or hitboxes. FTC has a debug overlay too.",
+        concept: "Telemetry is data your robot sends back to the Driver Station so humans can see what the code is thinking.",
+        example: "`telemetry.addData()` can show motor power, sensor distance, heading, target position, or which mode is active.",
+        takeaway: "Telemetry turns invisible code decisions into visible clues.",
+        visual: "stats",
+        stats: [
+          ["Game overlay", "FPS, ping, coordinates, debug info"],
+          ["FTC telemetry", "Sensor values, motor power, state, errors"]
+        ],
+        code: [{
+          title: "FTC telemetry overlay",
+          text: `telemetry.addData("Mode", "Driver Control");
+telemetry.addData("Claw Open", clawOpen);
+telemetry.addData("Distance (in)", distanceSensor.getDistance(DistanceUnit.INCH));
+telemetry.addData("Heading", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+telemetry.update();`
+        }],
+        prompts: [
+          "What telemetry should I add to an FTC drivetrain?",
+          "Explain telemetry like a game's debug overlay.",
+          "How can telemetry help find sensor problems?"
+        ],
+        tags: ["telemetry.addData", "logging", "debug overlay", "Driver Station"]
+      },
+      {
+        title: "Career Paths: Build the Future",
+        part: "Closing",
+        icon: "🚀",
+        accent: "#ffd166",
+        hook: "The skills behind games and FTC robots can turn into real jobs.",
+        concept: "Computer science connects to game development, robotics, AI, cybersecurity, data science, hardware engineering, product design, and teaching.",
+        example: "A game developer might write player movement code. A robotics engineer might write autonomous navigation. An AI engineer might build systems that recognize objects or plan actions.",
+        takeaway: "Learning computer basics now gives you more choices later.",
+        visual: "chips",
+        chips: ["Game Developer", "Robotics Engineer", "AI Engineer", "FTC Mentor", "UX Designer", "Cybersecurity"],
+        prompts: [
+          "What careers connect gaming and robotics?",
+          "What should a middle school student learn to become a robotics engineer?",
+          "How does Java help in future computer science classes?"
+        ],
+        tags: ["career", "game dev", "robotics", "AI"]
+      },
+      {
+        title: "Recap: Five Big Takeaways",
+        part: "Closing",
+        icon: "✅",
+        accent: "#9dff7a",
+        hook: "A good quest ends by checking what you unlocked.",
+        concept: "You now have a map for thinking about computers: hardware, software, code, loops, and debugging.",
+        example: "When something happens in a game or robot, ask: What was the input? What processed it? Where was data stored? What output happened? How can I prove it?",
+        takeaway: "The same principles power games, apps, websites, and FTC robots.",
+        visual: "chips",
+        chips: ["Computers process information", "Hardware and software work together", "Java controls FTC robots", "Loops make systems interactive", "Telemetry helps debugging"],
+        prompts: [
+          "Quiz me on the five biggest ideas from computer basics.",
+          "Create flashcards for hardware, software, CPU, RAM, and loops.",
+          "Explain the whole lesson in one Minecraft analogy."
+        ],
+        tags: ["recap", "flashcards", "study", "computer basics"]
+      },
+      {
+        title: "After-Class Challenges",
+        part: "Closing",
+        icon: "🏆",
+        accent: "#54f0ff",
+        hook: "Time to test your build. Try the mini challenges, then use the AI prompts to go deeper.",
+        concept: "Learning sticks when you explain, predict, debug, and build something small.",
+        example: "Use the answer boxes below. Short answers are fine. Then copy prompts into an AI assistant and ask follow-up questions until the idea feels clear.",
+        takeaway: "The goal is not memorizing words. The goal is seeing the pattern behind games, code, and robots.",
+        visual: "challenge",
+        prompts: [
+          "Game prompt: Explain CPU, GPU, RAM, and storage using Minecraft examples.",
+          "Game prompt: Trace what happens when I press jump in Roblox from input to output.",
+          "Game prompt: Why does network lag make multiplayer games feel unfair?",
+          "Game prompt: Make a quiz about hardware vs software using Fortnite examples.",
+          "Game prompt: Explain game loops and FPS to a 7th grader.",
+          "FTC Java prompt: Write a simple @TeleOp FTC Java OpMode that drives with one joystick.",
+          "FTC Java prompt: Show me how to use telemetry.addData() to debug a distance sensor.",
+          "FTC Java prompt: Explain hardwareMap.get(DcMotor.class, \"left_drive\") line by line.",
+          "FTC Java prompt: Write FTC Java if/else code that opens a servo claw when gamepad1.a is pressed.",
+          "FTC Java prompt: Help me design methods for driveForward, stopDrive, openClaw, and closeClaw."
+        ],
+        tags: ["challenge", "AI prompts", "practice", "FTC Java"]
+      }
+    ];
+
+    const challengeData = [
+      {
+        question: "1. What are the four steps in the basic computer cycle?",
+        answers: ["input process storage output", "input processing storage output", "input process store output"],
+        reveal: "Input, process, storage, output."
+      },
+      {
+        question: "2. In FTC Java, which object usually reads driver buttons and joysticks?",
+        answers: ["gamepad1", "gamepad", "gamepad2"],
+        reveal: "`gamepad1` is the common driver controller object; `gamepad2` is often used for a second driver."
+      },
+      {
+        question: "3. Which FTC SDK class is commonly used for a drive motor?",
+        answers: ["dcmotor", "dc motor"],
+        reveal: "`DcMotor` represents a motor in FTC Java."
+      }
+    ];
+
+    const main = document.getElementById("main");
+    const toc = document.getElementById("toc");
+    const progressFill = document.getElementById("progressFill");
+    const progressLabel = document.getElementById("progressLabel");
+    const toast = document.getElementById("toast");
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function escapeCode(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+    }
+
+    function highlightJava(code) {
+      const keywords = new Set(["public", "private", "protected", "class", "extends", "implements", "new", "if", "else", "while", "for", "return", "void", "double", "int", "boolean", "String", "true", "false", "final", "static", "import", "package"]);
+      const types = new Set(["DcMotor", "Servo", "ColorSensor", "DistanceSensor", "IMU", "OpMode", "LinearOpMode", "TeleOp", "Autonomous", "DistanceUnit", "AngleUnit", "Override", "hardwareMap", "telemetry", "gamepad1", "gamepad2"]);
+      return escapeCode(code).replace(/\/\/.*|"(?:\\.|[^"\\])*"|@[A-Za-z_][A-Za-z0-9_]*|\b-?\d+(?:\.\d+)?\b|\b[A-Za-z_][A-Za-z0-9_]*\b/g, token => {
+        if (token.startsWith("//")) return `<span class="tok-comment">${token}</span>`;
+        if (token.startsWith("\"")) return `<span class="tok-str">${token}</span>`;
+        if (token.startsWith("@")) return `<span class="tok-ann">${token}</span>`;
+        if (/^-?\d/.test(token)) return `<span class="tok-num">${token}</span>`;
+        if (keywords.has(token)) return `<span class="tok-key">${token}</span>`;
+        if (types.has(token)) return `<span class="tok-type">${token}</span>`;
+        return token;
+      });
+    }
+
+    function visualMarkup(section, index) {
+      if (section.visual === "hero") {
+        return `<div class="hero-orbit" aria-label="Games, code, and robots visual">
+          <div class="core-cube">💻</div>
+          <div class="orbit-item">🎮</div>
+          <div class="orbit-item">🤖</div>
+          <div class="orbit-item">☕</div>
+          <div class="orbit-item">⚙️</div>
+        </div>`;
+      }
+
+      if (section.visual === "flow") {
+        const chips = section.chips || ["Input", "Process", "Storage", "Output"];
+        return `<div class="visual">
+          <div class="visual-title">System Chain</div>
+          <div class="flow">${chips.slice(0, 6).map(item => `<div>${escapeHtml(item)}</div>`).join("")}</div>
+        </div>`;
+      }
+
+      if (section.visual === "stats") {
+        return `<div class="visual">
+          <div class="visual-title">Quick Compare</div>
+          <div class="stat-grid">${(section.stats || []).map(pair => `<div class="stat"><strong>${escapeHtml(pair[0])}</strong><span>${escapeHtml(pair[1])}</span></div>`).join("")}</div>
+        </div>`;
+      }
+
+      if (section.visual === "loop") {
+        return `<div class="visual">
+          <div class="visual-title">Live Loop Visualizer</div>
+          <div class="loop-viz" id="loopViz">
+            <div class="loop-step active">1. Read sensors<br>and gamepad</div>
+            <div class="loop-step">2. Run logic</div>
+            <div class="loop-step">3. Set motors<br>and telemetry</div>
+          </div>
+          <div class="bot-track"><div class="bot" id="loopBot">🤖</div></div>
+        </div>`;
+      }
+
+      if (section.visual === "challenge") {
+        return `<div class="visual">
+          <div class="visual-title">Mini Challenge Console</div>
+          <div class="challenge-board">
+            ${challengeData.map((item, i) => `<div class="challenge" data-answer-index="${i}">
+              <p>${escapeHtml(item.question)}</p>
+              <div class="challenge-row">
+                <input type="text" aria-label="Answer for challenge ${i + 1}" placeholder="Type your answer..." />
+                <button class="answer-btn check-answer">Check</button>
+                <button class="answer-btn show-answer">Show</button>
+              </div>
+              <div class="feedback"></div>
+            </div>`).join("")}
+          </div>
+        </div>`;
+      }
+
+      return `<div class="visual">
+        <div class="visual-title">Keyword Loadout</div>
+        <div class="chip-row">${(section.chips || section.tags || []).map(chip => `<span class="chip">${escapeHtml(chip)}</span>`).join("")}</div>
+      </div>`;
+    }
+
+    function codeMarkup(section, sectionIndex) {
+      if (!section.code) return "";
+      return section.code.map((block, blockIndex) => {
+        const id = `code-${sectionIndex}-${blockIndex}`;
+        return `<div class="code-card">
+          <div class="code-head">
+            <span>${escapeHtml(block.title || "Java example")}</span>
+            <button class="copy-btn" data-copy-target="${id}">Copy code</button>
+          </div>
+          <pre><code id="${id}" data-raw="${escapeHtml(block.text)}">${highlightJava(block.text)}</code></pre>
+        </div>`;
+      }).join("");
+    }
+
+    function aiMarkup(section, index) {
+      const prompts = section.prompts || [];
+      const tags = section.tags || [];
+      return `<details class="ai-card">
+        <summary>🤖 Learn More with AI</summary>
+        <div class="ai-body">
+          <ul class="prompt-list">
+            ${prompts.map((prompt, promptIndex) => `<li class="prompt">
+              <span>${escapeHtml(prompt)}</span>
+              <button class="copy-btn" data-copy-text="${escapeHtml(prompt)}">Copy</button>
+            </li>`).join("")}
+          </ul>
+          <div class="tag-row">
+            ${tags.map(tag => `<button class="tag" data-copy-text="Explain ${escapeHtml(tag)} using games and FTC robotics examples.">${escapeHtml(tag)}</button>`).join("")}
+          </div>
+        </div>
+      </details>`;
+    }
+
+    function sectionMarkup(section, index) {
+      const padded = String(index + 1).padStart(2, "0");
+      const start = section.cta ? `<button class="start-btn" data-jump="1">Start Learning ↓</button>` : "";
+      return `<section class="lesson-section" id="section-${index + 1}" data-index="${index}" data-icon="${escapeHtml(section.icon)}" style="--accent:${section.accent}; --x:${35 + (index * 17) % 55}%; --y:${18 + (index * 13) % 54}%;">
+        <div class="section-inner">
+          <div class="kicker"><span class="part-pill">${escapeHtml(section.part)}</span><span>Section ${padded} / 30</span></div>
+          ${index === 0 ? `<h1>${escapeHtml(section.title)}</h1>` : `<h2>${escapeHtml(section.title)}</h2>`}
+          ${index === 0 ? `<p class="subtitle">What do Minecraft and your FTC robot have in common?</p>` : ""}
+          ${start}
+          <div class="content-grid">
+            <div class="concept-stack">
+              <div class="block hook"><h3>${section.icon} Hook</h3><p>${escapeHtml(section.hook)}</p></div>
+              <div class="block"><h3>Core Concept</h3><p>${escapeHtml(section.concept)}</p></div>
+              <div class="block"><h3>Concrete Example</h3><p>${escapeHtml(section.example)}</p></div>
+              <div class="block takeaway"><h3>Take Away</h3><p>${escapeHtml(section.takeaway)}</p></div>
+            </div>
+            <div class="example-panel">
+              ${visualMarkup(section, index)}
+              ${codeMarkup(section, index)}
+              ${aiMarkup(section, index)}
+            </div>
+          </div>
+        </div>
+      </section>`;
+    }
+
+    main.innerHTML = lessonSections.map(sectionMarkup).join("");
+    toc.innerHTML = lessonSections.map((section, index) => `<li>
+      <button type="button" data-jump="${index}">
+        <span class="toc-num">${String(index + 1).padStart(2, "0")}</span>
+        <span>${escapeHtml(section.title)}</span>
+      </button>
+    </li>`).join("");
+
+    const sections = Array.from(document.querySelectorAll(".lesson-section"));
+    const tocButtons = Array.from(document.querySelectorAll(".toc button"));
+    let currentIndex = 0;
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toast.classList.remove("show"), 1500);
+    }
+
+    function copyText(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => showToast("Copied"));
+      } else {
+        const temp = document.createElement("textarea");
+        temp.value = text;
+        temp.setAttribute("readonly", "");
+        temp.style.position = "fixed";
+        temp.style.left = "-9999px";
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand("copy");
+        temp.remove();
+        showToast("Copied");
+      }
+    }
+
+    function updateProgress(index) {
+      currentIndex = Math.max(0, Math.min(sections.length - 1, index));
+      const percent = ((currentIndex + 1) / sections.length) * 100;
+      progressFill.style.width = `${percent}%`;
+      progressLabel.textContent = `${String(currentIndex + 1).padStart(2, "0")} / ${sections.length}`;
+      tocButtons.forEach((button, i) => button.classList.toggle("active", i === currentIndex));
+    }
+
+    function goToSection(index) {
+      const target = sections[Math.max(0, Math.min(sections.length - 1, index))];
+      if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+      document.body.classList.remove("nav-open");
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const index = Number(entry.target.dataset.index);
+          entry.target.classList.add("in-view");
+          updateProgress(index);
+        }
+      });
+    }, { threshold: 0.52 });
+
+    sections.forEach(section => observer.observe(section));
+
+    document.addEventListener("click", (event) => {
+      const jump = event.target.closest("[data-jump]");
+      if (jump) {
+        goToSection(Number(jump.dataset.jump));
+        return;
+      }
+
+      const copyTarget = event.target.closest("[data-copy-target]");
+      if (copyTarget) {
+        const code = document.getElementById(copyTarget.dataset.copyTarget);
+        copyText(code ? code.dataset.raw : "");
+        return;
+      }
+
+      const copyPrompt = event.target.closest("[data-copy-text]");
+      if (copyPrompt) {
+        copyText(copyPrompt.dataset.copyText);
+        return;
+      }
+
+      const check = event.target.closest(".check-answer");
+      if (check) {
+        const box = check.closest(".challenge");
+        const input = box.querySelector("input");
+        const feedback = box.querySelector(".feedback");
+        const item = challengeData[Number(box.dataset.answerIndex)];
+        const guess = input.value.trim().toLowerCase().replace(/[^\w\s]/g, "").replace(/\s+/g, " ");
+        const ok = item.answers.some(answer => guess.includes(answer));
+        feedback.textContent = ok ? "Correct. You found the core idea." : "Not quite. Try using the key term from the lesson.";
+        feedback.style.color = ok ? "var(--lime)" : "var(--gold)";
+        return;
+      }
+
+      const show = event.target.closest(".show-answer");
+      if (show) {
+        const box = show.closest(".challenge");
+        const feedback = box.querySelector(".feedback");
+        const item = challengeData[Number(box.dataset.answerIndex)];
+        feedback.textContent = item.reveal;
+        feedback.style.color = "var(--cyan)";
+      }
+    });
+
+    document.getElementById("prevBtn").addEventListener("click", () => goToSection(currentIndex - 1));
+    document.getElementById("nextBtn").addEventListener("click", () => goToSection(currentIndex + 1));
+
+    document.getElementById("menuBtn").addEventListener("click", () => {
+      document.body.classList.toggle("nav-open");
+    });
+
+    document.getElementById("drawerBackdrop").addEventListener("click", () => {
+      document.body.classList.remove("nav-open");
+    });
+
+    document.getElementById("shareBtn").addEventListener("click", async () => {
+      const shareData = {
+        title: document.title,
+        text: "Computer basics through games and FTC robotics",
+        url: location.href
+      };
+      if (navigator.share) {
+        try {
+          await navigator.share(shareData);
+        } catch (error) {
+          copyText(location.href);
+        }
+      } else {
+        copyText(location.href);
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.target.matches("input, textarea")) return;
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        goToSection(currentIndex + 1);
+      }
+      if (event.key === "ArrowUp") {
+        event.preventDefault();
+        goToSection(currentIndex - 1);
+      }
+    });
+
+    let loopStep = 0;
+    setInterval(() => {
+      const loopViz = document.getElementById("loopViz");
+      const bot = document.getElementById("loopBot");
+      if (!loopViz || !bot) return;
+      const steps = Array.from(loopViz.querySelectorAll(".loop-step"));
+      steps.forEach((step, index) => step.classList.toggle("active", index === loopStep));
+      const trackWidth = bot.parentElement.clientWidth - bot.clientWidth - 8;
+      bot.style.transform = `translateX(${(trackWidth / 2) * loopStep}px)`;
+      loopStep = (loopStep + 1) % steps.length;
+    }, 900);
+
+    updateProgress(0);
+    sections[0].classList.add("in-view");
+  </script>
+</body>
+</html>
